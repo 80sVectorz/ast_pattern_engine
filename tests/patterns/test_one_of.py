@@ -3,6 +3,7 @@ from ast_pattern_engine.nodes.basic import Collect, WildCard, NodePattern
 from ast_pattern_engine.nodes.sequences import OneOf
 from ast_pattern_engine.engine import _match_patterns, match_sequence
 
+
 def test_one_of_non_strict_returns_first_match():
     nodes = [ast.parse(src).body[0] for src in ("1", "2")]
     pattern = [
@@ -49,9 +50,9 @@ def test_one_of_strict_matches_exactly_one_pattern():
     ]
 
     result = _match_patterns(pattern, nodes, 0, {})
-    assert (
-        len(result) == 0
-    ), "Expected strict OneOf not to match because multiple sub patterns match"
+    assert len(result) == 0, (
+        "Expected strict OneOf not to match because multiple sub patterns match"
+    )
 
     # Section B: Test strict mode with exactly one matching pattern for each line
     nodes = [ast.parse(src).body[0] for src in ("1", "x=2")]

@@ -123,7 +123,7 @@ def test_pt_nonlist_replace_errors():
 
     # Error: handler returns non-list
     def bad_handler(_):
-        return _constant_val(2) # type: ignore
+        return _constant_val(2)  # type: ignore
 
     transformer2 = PatternTransformer(pattern, {"c": bad_handler})
     with pytest.raises(TypeError, match="Handler must return list"):
@@ -133,7 +133,7 @@ def test_pt_nonlist_replace_errors():
 def test_pt_plan_errors():
     tree = ast.parse("a = 1\nb = 2")
     pattern = [Collect(NodePattern(ast.Assign), "a")]
-    
+
     # key not in bindings (should silently continue)
     transformer1 = PatternTransformer(pattern, {"missing_key": lambda b: []})
     transformer1.visit(ast.parse("a = 1"))
@@ -142,11 +142,12 @@ def test_pt_plan_errors():
     transformer2 = PatternTransformer(pattern, {"a": lambda b: []})
     # override matching to return empty list for testing
     b = {"a": []}
-    transformer2.matches.append(b) 
-    
+    transformer2.matches.append(b)
+
     # handler returns non-list
     def bad_plan_handler(_):
         return "not a list"
+
     transformer3 = PatternTransformer(pattern, {"a": bad_plan_handler})
     with pytest.raises(TypeError, match="must return `list"):
         transformer3.visit(ast.parse("a = 1"))
@@ -166,6 +167,7 @@ def test_pt_nested_replace_and_delete():
     # Replace nested nodes
     def replace_with_99(_):
         return [_constant_val(99)]
+
     transformer2 = PatternTransformer(pattern, {"c": replace_with_99})
     res2 = transformer2.visit(ast.parse("x = [1, 2, 3]"))
     assert all(elt.value == 99 for elt in res2.body[0].value.elts)
@@ -174,18 +176,20 @@ def test_pt_nested_replace_and_delete():
 def test_pt_dict_as_nodes():
     tree = ast.parse("x = 1")
     pattern = [Collect(NodePattern(ast.Assign), "a")]
-    
+
     # We force the binding to be a dict to trigger dict handling in _as_nodes
     class DictTransformer(PatternTransformer):
         def _plan(self, seq):
             # Intercept and mutate bindings
             res = super()._plan(seq)
             return res
-            
+
     transformer = DictTransformer(pattern, {"a": lambda b: [_parse_stmt("x = 2")]})
     # Override match manually
-    mtch = transformer._match_patterns = lambda p, s, i, b: [({"a": {"nested": s[i]}}, i+1)] if i < len(s) else []
-    
+    mtch = transformer._match_patterns = lambda p, s, i, b: (
+        [({"a": {"nested": s[i]}}, i + 1)] if i < len(s) else []
+    )
+
     res = transformer.visit(tree)
     assert isinstance(res.body[0], ast.Assign)
     assert res.body[0].value.value == 2
@@ -195,14 +199,14 @@ def test_pt_generic_visit_list_field_error():
     tree = ast.parse("a = 1")
     pattern = [Collect(NodePattern(ast.Assign), "a")]
     transformer = PatternTransformer(pattern, {})
-    
+
     # Force a child to not be an AST node
     class BadTransformer(PatternTransformer):
         def visit(self, node):
             if isinstance(node, ast.Assign):
                 return "Not an AST node"
             return super().visit(node)
-            
+
     bad_transformer = BadTransformer(pattern, {})
     with pytest.raises(TypeError, match="must contain AST nodes"):
         bad_transformer.visit(ast.parse("a = 1"))

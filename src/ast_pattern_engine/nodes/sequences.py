@@ -6,7 +6,11 @@ from ast_pattern_engine.core import Pattern
 
 class SequencePattern(Pattern):
     def match_node(
-        self, node: object, bindings: dict[str, object] | None = None, *, _force_list: bool = False
+        self,
+        node: object,
+        bindings: dict[str, object] | None = None,
+        *,
+        _force_list: bool = False,
     ):
         # Matching is handled by engine._match_sequence
         raise NotImplementedError(

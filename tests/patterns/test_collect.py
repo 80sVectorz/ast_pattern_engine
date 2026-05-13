@@ -1,6 +1,7 @@
 import ast
 from ast_pattern_engine.nodes.basic import Collect, NodePattern
 
+
 def test_collect_match_single_constant():
     node = ast.parse("1").body[0]
     assert isinstance(node, ast.Expr)

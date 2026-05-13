@@ -26,7 +26,9 @@ def _match_patterns(
 
     match first:
         case PatternGroup(pattern=sub_pattern, key=key):
-            res = _match_patterns(sub_pattern, nodes, pos, dict(bindings), _force_list=_force_list)
+            res = _match_patterns(
+                sub_pattern, nodes, pos, dict(bindings), _force_list=_force_list
+            )
             if res:
                 new_bindings = res[-1][0]
                 if key is not None:
@@ -40,7 +42,9 @@ def _match_patterns(
             new_bindings = dict(bindings)
             n_reps = 0
             while n_reps < (max_matches or len(nodes)) and pos < len(nodes):
-                res = _match_patterns([sub_pattern], nodes, pos, dict(new_bindings), _force_list=True)
+                res = _match_patterns(
+                    [sub_pattern], nodes, pos, dict(new_bindings), _force_list=True
+                )
                 if not res:
                     break
                 new_bindings, pos = res[-1]
@@ -54,7 +58,9 @@ def _match_patterns(
             new_pos = pos
             n_matches = 0
             for pattern in sub_patterns:
-                res = _match_patterns([pattern], nodes, pos, dict(bindings), _force_list=_force_list)
+                res = _match_patterns(
+                    [pattern], nodes, pos, dict(bindings), _force_list=_force_list
+                )
                 if res:
                     n_matches += 1
                     if n_matches == 1:
@@ -74,7 +80,9 @@ def _match_patterns(
                 out.append((new_bindings, pos))
 
         case Optional(pattern=sub_pattern, key=key):
-            res = _match_patterns([sub_pattern], nodes, pos, dict(bindings), _force_list=_force_list)
+            res = _match_patterns(
+                [sub_pattern], nodes, pos, dict(bindings), _force_list=_force_list
+            )
             if res:
                 new_bindings, new_pos = res[-1]
                 if key is not None:
@@ -88,13 +96,17 @@ def _match_patterns(
         case _:
             # single node pattern
             if pos < len(nodes):
-                res = first.match_node(nodes[pos], dict(bindings), _force_list=_force_list)
+                res = first.match_node(
+                    nodes[pos], dict(bindings), _force_list=_force_list
+                )
                 if res is not None:
                     out.append((res, pos + 1))
 
     # Match remaining patterns
     if out and remaining:
-        rem_res = _match_patterns(remaining, nodes, out[-1][1], out[-1][0], _force_list=_force_list)
+        rem_res = _match_patterns(
+            remaining, nodes, out[-1][1], out[-1][0], _force_list=_force_list
+        )
         if not rem_res:
             return []
         out.extend(rem_res)

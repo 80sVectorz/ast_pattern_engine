@@ -25,7 +25,13 @@ class Bind(Pattern):
     def __init__(self, key: str):
         self.key = key
 
-    def match_node(self, node: Any, bindings: dict[str, Any] | None = None, *, _force_list: bool = False):
+    def match_node(
+        self,
+        node: Any,
+        bindings: dict[str, Any] | None = None,
+        *,
+        _force_list: bool = False,
+    ):
         bindings = bindings or {}
         if self.key in bindings:
             if not _force_list:
@@ -41,7 +47,13 @@ class WildCard(Pattern):
 
     def __init__(self): ...
 
-    def match_node(self, node: Any, bindings: dict[str, Any] | None = None, *, _force_list: bool = False):
+    def match_node(
+        self,
+        node: Any,
+        bindings: dict[str, Any] | None = None,
+        *,
+        _force_list: bool = False,
+    ):
         bindings = bindings or {}
         return bindings
 
@@ -58,7 +70,13 @@ class NodePattern(Pattern):
         self.node_type = node_type
         self.field_patterns = field_patterns
 
-    def match_node(self, node: Any, bindings: dict[str, Any] | None = None, *, _force_list: bool = False):
+    def match_node(
+        self,
+        node: Any,
+        bindings: dict[str, Any] | None = None,
+        *,
+        _force_list: bool = False,
+    ):
         bindings = bindings or {}
         if not isinstance(node, self.node_type):
             return None
@@ -85,9 +103,7 @@ class NodePattern(Pattern):
                             return None
                         merged[k] = self._to_list(merged[k]) + self._to_list(v)
                     else:
-                        merged[k] = (
-                            self._to_list(v) if _force_list else v
-                        )
+                        merged[k] = self._to_list(v) if _force_list else v
             else:
                 if val != pat:
                     return None
@@ -113,7 +129,11 @@ class Collect(Pattern):
         self.key = key
 
     def match_node(
-        self, node: Any, bindings: dict[str, Any] | None = None, *, _force_list: bool = False
+        self,
+        node: Any,
+        bindings: dict[str, Any] | None = None,
+        *,
+        _force_list: bool = False,
     ) -> None | dict[str, Any]:
         bindings = bindings or {}
         # Collect is a binding boundary — inner patterns always see _force_list=False
@@ -167,7 +187,13 @@ class Filter(Pattern):
         self.predicate = predicate
         self.key = key
 
-    def match_node(self, node: Any, bindings: dict[str, Any] | None = None, *, _force_list: bool = False):
+    def match_node(
+        self,
+        node: Any,
+        bindings: dict[str, Any] | None = None,
+        *,
+        _force_list: bool = False,
+    ):
         bindings = bindings or {}
         if not self.predicate(node):
             return None
@@ -192,7 +218,13 @@ class Not(Pattern):
     def __init__(self, pattern: Pattern):
         self.pattern = pattern
 
-    def match_node(self, node: Any, bindings: dict[str, Any] | None = None, *, _force_list: bool = False):
+    def match_node(
+        self,
+        node: Any,
+        bindings: dict[str, Any] | None = None,
+        *,
+        _force_list: bool = False,
+    ):
         bindings = bindings or {}
 
         # Use _match_patterns so that SequencePatterns (like OneOf) don't
@@ -214,7 +246,13 @@ class Contains(Pattern):
     def __init__(self, pattern: Sequence[Pattern]):
         self.pattern = list(pattern)
 
-    def match_node(self, node: Any, bindings: dict[str, Any] | None = None, *, _force_list: bool = False):
+    def match_node(
+        self,
+        node: Any,
+        bindings: dict[str, Any] | None = None,
+        *,
+        _force_list: bool = False,
+    ):
         bindings = bindings or {}
         finder = SingleOccurrenceFinder(self.pattern)
         finder.visit(node)
@@ -245,12 +283,20 @@ class AllOf(Pattern):
     def __init__(self, patterns: Sequence[Pattern]):
         self.patterns = list(patterns)
 
-    def match_node(self, node: Any, bindings: dict[str, Any] | None = None, *, _force_list: bool = False):
+    def match_node(
+        self,
+        node: Any,
+        bindings: dict[str, Any] | None = None,
+        *,
+        _force_list: bool = False,
+    ):
         bindings = bindings or {}
         new_bindings = dict(bindings)
 
         for pattern in self.patterns:
-            new_bindings = pattern.match_node(node, new_bindings, _force_list=_force_list)
+            new_bindings = pattern.match_node(
+                node, new_bindings, _force_list=_force_list
+            )
             if new_bindings is None:
                 return None
         return new_bindings
@@ -269,7 +315,13 @@ class AnyOf(Pattern):
     def __init__(self, patterns: Sequence[Pattern]):
         self.patterns = list(patterns)
 
-    def match_node(self, node: Any, bindings: dict[str, Any] | None = None, *, _force_list: bool = False):
+    def match_node(
+        self,
+        node: Any,
+        bindings: dict[str, Any] | None = None,
+        *,
+        _force_list: bool = False,
+    ):
         bindings = bindings or {}
         merged = dict(bindings)
         matched_any = False

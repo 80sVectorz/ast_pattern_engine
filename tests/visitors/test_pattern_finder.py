@@ -17,7 +17,10 @@ def test_pattern_finder_collects_node_matches():
 def test_pattern_finder_scan_list():
     tree = ast.parse("a = 1\nb = 2\nc = 3")
     # A sequence of length 2 to trigger `_scan_list` len(self.pattern) > 1 branch
-    pattern = [Collect(NodePattern(ast.Assign), "a"), Collect(NodePattern(ast.Assign), "b")]
+    pattern = [
+        Collect(NodePattern(ast.Assign), "a"),
+        Collect(NodePattern(ast.Assign), "b"),
+    ]
     finder = PatternFinder(pattern)
     finder.visit(tree)
     # Print the matches to debug

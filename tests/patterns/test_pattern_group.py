@@ -3,6 +3,7 @@ from ast_pattern_engine.nodes.basic import Collect, WildCard, NodePattern
 from ast_pattern_engine.nodes.sequences import PatternGroup
 from ast_pattern_engine.engine import _match_patterns, match_sequence
 
+
 def test_pattern_group_collects_inner_bindings_under_key():
     nodes = [ast.parse(src).body[0].value for src in ("1", "2")]  # type: ignore
     pattern = [

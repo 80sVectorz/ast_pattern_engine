@@ -8,7 +8,11 @@ class Pattern(ast.AST):
 
     # public API
     def match_node(
-        self, node: object, bindings: dict[str, object] | None = None, *, _force_list: bool = False
+        self,
+        node: object,
+        bindings: dict[str, object] | None = None,
+        *,
+        _force_list: bool = False,
     ):
         """Match *node* and return updated *bindings* or *None*."""
         raise NotImplementedError
@@ -21,7 +25,11 @@ class Pattern(ast.AST):
 
 class SequencePattern(Pattern):
     def match_node(
-        self, node: object, bindings: dict[str, object] | None = None, *, _force_list: bool = False
+        self,
+        node: object,
+        bindings: dict[str, object] | None = None,
+        *,
+        _force_list: bool = False,
     ):
         # Matching is handled by engine._match_sequence
         raise NotImplementedError(

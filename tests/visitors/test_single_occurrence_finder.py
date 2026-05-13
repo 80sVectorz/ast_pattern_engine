@@ -29,8 +29,8 @@ def test_single_occurrence_finder_early_exit():
     tree = ast.parse("a = 1\nb = 2")
     pattern = [NodePattern(ast.Assign)]
     finder = SingleOccurrenceFinder(pattern)
-    
+
     # We manually set found to True to test early exit in visit
     finder.found = True
     finder.visit(tree)
-    assert finder.match_node is None # Didn't actually match because it early exited
+    assert finder.match_node is None  # Didn't actually match because it early exited

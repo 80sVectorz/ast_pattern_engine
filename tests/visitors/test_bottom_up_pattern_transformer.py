@@ -14,7 +14,7 @@ def _constant(value, template):
 
 
 def test_bottom_up_pattern_transformer_collapses_children_before_parent():
-    source = "def foo():\n" "    return (1 + 2) + (3 + 4)\n"
+    source = "def foo():\n    return (1 + 2) + (3 + 4)\n"
     tree = ast.parse(source)
     pattern = [Collect(NodePattern(ast.BinOp), "expr")]
 
@@ -60,6 +60,7 @@ def test_bu_transformer_list_manipulation():
     # Return multiple nodes (expands)
     def expand(_):
         return [_parse_stmt("pass"), _parse_stmt("pass")]
+
     transformer3 = BottomUpPatternTransformer(pattern, {"a": expand})
     res3 = transformer3.visit(ast.parse("x = 1"))
     assert len(res3.body) == 2

@@ -3,6 +3,7 @@ from ast_pattern_engine.nodes.basic import Collect, WildCard
 from ast_pattern_engine.nodes.sequences import Repetition
 from ast_pattern_engine.engine import _match_patterns
 
+
 def test_collect_inside_one_or_more_accumulates_nodes():
     nodes = [ast.parse(str(i)).body[0].value for i in range(3)]  # type: ignore
     pattern = [Repetition(Collect(WildCard(), "item"))]
