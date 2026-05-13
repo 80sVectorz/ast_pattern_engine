@@ -1,6 +1,6 @@
 [project]
 name = "ast-pattern-engine"
-version = "1.0.0"
+version = "1.0.1"
 description = "A library for regex-inspired fine-grained AST pattern matching and replacing"
 readme = "README.md"
 authors = [
