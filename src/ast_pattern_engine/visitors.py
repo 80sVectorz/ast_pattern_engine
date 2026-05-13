@@ -1,3 +1,4 @@
+from typing import TypeAlias
 import ast
 from typing import Any
 from collections.abc import Sequence, Callable
@@ -5,7 +6,7 @@ from collections.abc import Sequence, Callable
 from ast_pattern_engine.core import Pattern
 from ast_pattern_engine.engine import _match_patterns
 
-type ReplaceResult = ast.AST | list[ast.AST] | None
+ReplaceResult: TypeAlias = ast.AST | list[ast.AST] | None
 
 
 class PatternTransformer(ast.NodeTransformer):
