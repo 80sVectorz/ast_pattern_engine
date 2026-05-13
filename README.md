@@ -1,3 +1,10 @@
+![PyPI - Version](https://img.shields.io/pypi/v/ast-pattern-engine)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/ast-pattern-engine)
+![Pytest](https://img.shields.io/badge/pytest-tested-orange)
+![MIT License](https://img.shields.io/badge/License-MIT-blue)
+![Codecov](https://codecov.io/gh/80sVectorz/ast_pattern_engine/branch/main/graph/badge.svg)
+![GitHub Workflow Status](https://github.com/80sVectorz/ast_pattern_engine/actions/workflows/ci.yml/badge.svg)
+
 # AST Pattern Engine
 
 A powerful, programmatic, regex-inspired AST pattern matching and manipulation library for Python.
