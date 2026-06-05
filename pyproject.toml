@@ -42,6 +42,8 @@ dev = [
     "pytest-cov>=7.1.0",
     "ruff>=0.11.0",
 ]
-
-[tool.ruff.lint]
-ignore = ["F841"] # Ignore unused variable assignments
+docs = [
+    "mkdocs>=1.6.1",
+    "mkdocs-material>=9.7.6",
+    "mkdocstrings[python]>=1.0.4",
+]
