@@ -29,6 +29,9 @@ class PatternTransformer(ast.NodeTransformer):
     Args:
         pattern: Sequence of pattern nodes matched against each candidate span.
         actions: Mapping from collect keys to replacement handlers or None.
+
+    Attributes:
+        matches: List of bindings for each match.
     """
 
     def __init__(
@@ -359,6 +362,9 @@ class BottomUpPatternTransformer(ast.NodeTransformer):
     Args:
         pattern: Sequence of pattern nodes matched against each candidate span.
         actions: Mapping from collect keys to replacement handlers or None.
+
+    Attributes:
+        matches: List of bindings for each match.
     """
 
     def __init__(
@@ -442,6 +448,10 @@ class PatternFinder(ast.NodeVisitor):
 
     Args:
         pattern: Sequence of pattern nodes to search for.
+
+    Attributes:
+        matches: List of bindings for each match.
+        visited: Set of visited node IDs.
     """
 
     def __init__(self, pattern: Sequence[Pattern]):
@@ -487,6 +497,10 @@ class SingleOccurrenceFinder(ast.NodeVisitor):
 
     Args:
         pattern: Sequence of pattern nodes to search for.
+
+    Attributes:
+        match_node: The first match node, if any.
+        match_bindings: The bindings for the first match, if any.
     """
 
     match_node: ast.AST | None
@@ -497,15 +511,15 @@ class SingleOccurrenceFinder(ast.NodeVisitor):
         self.match_node = None
         self.match_bindings = {}
         self.pattern = pattern
-        self.found = False
+        self._found_match = False
 
     def visit(self, node: ast.AST):
-        if self.found:
+        if self._found_match:
             return  # short-circuit: we've already found a match
 
         res = _match_patterns(self.pattern, [node], 0, {})
         if res:
-            self.found = True
+            self._found_match = True
             self.match_node = node
             self.match_bindings = res[0][0]
             return
@@ -516,12 +530,12 @@ class SingleOccurrenceFinder(ast.NodeVisitor):
                 for item in val:
                     if isinstance(item, ast.AST):
                         self.visit(item)
-                        if self.found:
+                        if self._found_match:
                             return
             elif isinstance(val, ast.AST):
                 self.visit(val)
-                if self.found:
+                if self._found_match:
                     return
 
     def found_match(self) -> bool:
-        return self.found
+        return self._found_match

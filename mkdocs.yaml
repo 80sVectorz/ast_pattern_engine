@@ -1,0 +1,50 @@
+site_name: AST Pattern Engine
+site_url: https://80svectorz.github.io/ast_pattern_engine/
+repo_url: https://github.com/80sVectorz/ast_pattern_engine
+
+theme:
+  name: material
+  palette:
+    - scheme: slate
+      primary: teal
+      accent: teal
+  features:
+    - navigation.tabs
+    - content.code.copy
+    - toc.follow
+
+plugins:
+  - search
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          options:
+            docstring_style: google
+            show_root_heading: true
+            show_source: true
+            separate_signature: true
+            show_signature_annotations: true
+            show_symbol_type_heading: true
+            show_symbol_type_toc: true
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_style: material
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+
+extra_css:
+  - stylesheets/extra.css
+
+nav:
+  - Home: index.md
+  - Guide & Philosophy: guide.md
+  - API Reference:
+      - Core & Engine: reference/core.md
+      - Pattern Nodes: reference/nodes.md
+      - AST Visitors: reference/visitors.md
+      - QoL Templates: reference/templates.md

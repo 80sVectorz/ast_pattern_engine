@@ -22,16 +22,16 @@ class Repetition(SequencePattern):
     """Matches a single pattern zero or more times.
 
     Also supports specifying min and max match count thresholds
+
+    Args:
+        pattern: The pattern to match.
+        min_matches: Minimum number of matches required. Default is 1.
+        max_matches: Maximum number of allowed matches. Defaults to None.
     """
 
     pattern: Pattern
-    """The pattern to match."""
-
     min_matches: int
-    """Minimum number of matches required. Defaults to 1."""
-
     max_matches: int | None
-    """Maximum number of allowed matches. Defaults to None."""
 
     def __init__(
         self,
@@ -42,9 +42,9 @@ class Repetition(SequencePattern):
         """Repetition node.
 
         Args:
-            pattern: The AST pattern.
-            min_matches: Min number of matches required. Default is 1.
-            max_matches: Max number of allowed matches. Defaults to None.
+            pattern: The pattern to match.
+            min_matches: Minimum number of matches required. Default is 1.
+            max_matches: Maximum number of allowed matches. Defaults to None.
         """
         self.pattern = pattern
         self.min_matches = min_matches
@@ -52,13 +52,15 @@ class Repetition(SequencePattern):
 
 
 class PatternGroup(SequencePattern):
-    """Matches a compound pattern/pattern group to an AST node sequence."""
+    """Matches a compound pattern/pattern group to an AST node sequence.
+
+    Args:
+        pattern: The compound pattern to match.
+        key: Optional key to bind the matched pattern to.
+    """
 
     pattern: Sequence[Pattern]
-    """The compound pattern to match."""
-
     key: str | None
-    """Optional key to bind the matched pattern to."""
 
     def __init__(self, pattern: Sequence[Pattern], key: str | None = None) -> None:
         """PatternGroup node.
@@ -84,30 +86,34 @@ class OneOf(SequencePattern):
     """
 
     patterns: list[Pattern]
-    """The patterns to match."""
-
     strict: bool
-    """Whether to be strict and only match if *exactly* one pattern matches."""
-
     key: str | None
-    """Optional key to bind the matched pattern to."""
 
     def __init__(
         self, patterns: Sequence[Pattern], strict: bool = False, key: str | None = None
     ) -> None:
+        """OneOf node.
+
+        Args:
+            patterns: The patterns to match
+            strict: Whether to be strict and only match if *exactly* one pattern matches
+            key: Optional key to bind the matched pattern to
+        """
         self.patterns = list(patterns)
         self.strict = strict
         self.key = key
 
 
 class Optional(SequencePattern):
-    """Matches a pattern zero or one times."""
+    """Matches a pattern zero or one times.
+
+    Args:
+        pattern: The pattern to match.
+        key: Optional key to bind the matched pattern to.
+    """
 
     pattern: Pattern
-    """The pattern to match."""
-
     key: str | None
-    """Optional key to bind the matched pattern to."""
 
     def __init__(self, pattern: Pattern, key: str | None = None) -> None:
         """Optional node.
