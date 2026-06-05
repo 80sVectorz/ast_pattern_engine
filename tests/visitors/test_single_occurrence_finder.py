@@ -31,6 +31,6 @@ def test_single_occurrence_finder_early_exit():
     finder = SingleOccurrenceFinder(pattern)
 
     # We manually set found to True to test early exit in visit
-    finder.found = True
+    finder._found_match = True
     finder.visit(tree)
     assert finder.match_node is None  # Didn't actually match because it early exited

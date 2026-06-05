@@ -11,10 +11,10 @@ from ast_pattern_engine.visitors import SingleOccurrenceFinder
 
 
 class Bind(Pattern):
-    """Bind the current node to `name`.
+    """Bind the current node to `key`.
 
     This is syntactic sugar for:
-        >>> Collect(WildCard(), "x")
+    >>> Collect(WildCard(), "x")
 
     Args:
         key: The key to bind the node(s) or value(s) to.
@@ -23,6 +23,11 @@ class Bind(Pattern):
     key: str
 
     def __init__(self, key: str):
+        """Bind node.
+
+        Args:
+            key: The key to bind the node(s) or value(s) to.
+        """
         self.key = key
 
     def match_node(
@@ -66,7 +71,16 @@ class NodePattern(Pattern):
         **field_patterns: Patterns or exact values to match against the node's fields.
     """
 
+    node_type: type[ast.AST]
+    field_patterns: dict[str, Pattern | Any]
+
     def __init__(self, node_type: type[ast.AST], **field_patterns: Pattern | Any):
+        """NodePattern node.
+
+        Args:
+            node_type: The AST node class to match (e.g., ast.Assign).
+            **field_patterns: Patterns or exact values to match against the node's fields.
+        """
         self.node_type = node_type
         self.field_patterns = field_patterns
 
@@ -119,12 +133,15 @@ class Collect(Pattern):
     """
 
     pattern: Pattern
-    """The pattern to match."""
-
     key: str
-    """The key to bind the pattern result to."""
 
     def __init__(self, pattern: Pattern, key: str):
+        """Collect node.
+
+        Args:
+            pattern: The pattern to match.
+            key: The key to bind the pattern result to.
+        """
         self.pattern = pattern
         self.key = key
 
@@ -178,12 +195,15 @@ class Filter(Pattern):
     """
 
     predicate: Callable[[Any], bool]
-    """The predicate to match."""
-
     key: str | None
-    """The key to bind the node to."""
 
     def __init__(self, predicate: Callable[[Any], bool], key: str | None = None):
+        """Filter node.
+
+        Args:
+            predicate: A callable that returns True if the node matches.
+            key: Optional key to bind the matched node to.
+        """
         self.predicate = predicate
         self.key = key
 
@@ -215,7 +235,14 @@ class Not(Pattern):
         pattern: The pattern that must fail for this to match.
     """
 
+    pattern: Pattern
+
     def __init__(self, pattern: Pattern):
+        """Not node.
+
+        Args:
+            pattern: The pattern that must fail for this to match.
+        """
         self.pattern = pattern
 
     def match_node(
@@ -243,7 +270,14 @@ class Contains(Pattern):
         pattern: The pattern or sequence of patterns to search for in the sub-tree.
     """
 
+    pattern: Sequence[Pattern]
+
     def __init__(self, pattern: Sequence[Pattern]):
+        """Contains node.
+
+        Args:
+            pattern: The pattern or sequence of patterns to search for in the sub-tree.
+        """
         self.pattern = list(pattern)
 
     def match_node(
@@ -278,9 +312,13 @@ class AllOf(Pattern):
     """
 
     patterns: Sequence[Pattern]
-    """The patterns to match."""
 
     def __init__(self, patterns: Sequence[Pattern]):
+        """AllOf node.
+
+        Args:
+            patterns: Sequence of patterns that must all match the node.
+        """
         self.patterns = list(patterns)
 
     def match_node(
@@ -310,9 +348,13 @@ class AnyOf(Pattern):
     """
 
     patterns: list[Pattern]
-    """The patterns to match."""
 
     def __init__(self, patterns: Sequence[Pattern]):
+        """AnyOf node.
+
+        Args:
+            patterns: Sequence of patterns where at least one must match.
+        """
         self.patterns = list(patterns)
 
     def match_node(
