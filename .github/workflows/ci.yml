@@ -13,10 +13,10 @@ jobs:
     permissions:
       contents: write
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
 
     - name: Install uv
-      uses: astral-sh/setup-uv@v5
+      uses: astral-sh/setup-uv@v7
       with:
         enable-cache: true
 
@@ -27,7 +27,7 @@ jobs:
       run: uv run ruff check --exit-zero
 
     - name: Commit formatting changes
-      uses: stefanzweifel/git-auto-commit-action@v5
+      uses: stefanzweifel/git-auto-commit-action@v7
       with:
         commit_message: "style: auto-format with ruff"
 
@@ -40,17 +40,17 @@ jobs:
         python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
       with:
         ref: ${{ github.ref }}
 
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v6
       with:
         python-version: ${{ matrix.python-version }}
 
     - name: Install uv
-      uses: astral-sh/setup-uv@v5
+      uses: astral-sh/setup-uv@v7
       with:
         enable-cache: true
 
@@ -61,26 +61,43 @@ jobs:
       run: uv run pytest --cov=src --cov-report=xml
 
     - name: Upload coverage reports to Codecov
-      uses: codecov/codecov-action@v5
+      uses: codecov/codecov-action@v7
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   deploy-docs:
-    runs-on: ubuntu-latest
-    needs: test
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    permissions:
-      contents: write
-    steps:
-    - uses: actions/checkout@v4
+      runs-on: ubuntu-latest
+      needs: test
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      permissions:
+        contents: read
+        pages: write
+        id-token: write
+      environment:
+        name: github-pages
+        url: ${{ steps.deployment.outputs.page_url }}
+      steps:
+      - uses: actions/checkout@v7
 
-    - name: Install uv
-      uses: astral-sh/setup-uv@v5
-      with:
-        enable-cache: true
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
 
-    - name: Install Docs Dependencies
-      run: uv sync --only-group docs
+      - name: Install Docs Dependencies
+        run: uv sync --only-group docs
 
-    - name: Deploy Docs
-      run: uv run mkdocs gh-deploy --force
+      - name: Build Docs
+        run: uv run mkdocs build
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v6
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: './site'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
