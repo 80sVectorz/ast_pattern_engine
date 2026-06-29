@@ -1,8 +1,8 @@
-![PyPI - Version](https://img.shields.io/pypi/v/ast-pattern-engine)
-![PyPI - Python Version](https://img.shields.io/pypi/pyversions/ast-pattern-engine)
+[![PyPI - Version](https://img.shields.io/pypi/v/ast-pattern-engine)](https://pypi.org/project/ast-pattern-engine/)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/ast-pattern-engine)](https://pypi.org/project/ast-pattern-engine/)
 ![Pytest](https://img.shields.io/badge/pytest-tested-orange)
-![MIT License](https://img.shields.io/badge/License-MIT-blue)
-![Codecov](https://codecov.io/gh/80sVectorz/ast_pattern_engine/branch/main/graph/badge.svg)
+[![MIT License](https://img.shields.io/badge/License-MIT-blue)](https://opensource.org/license/mit)
+[![codecov](https://codecov.io/gh/80sVectorz/ast_pattern_engine/graph/badge.svg?token=JRK42I56C0)](https://codecov.io/gh/80sVectorz/ast_pattern_engine)
 ![GitHub Workflow Status](https://github.com/80sVectorz/ast_pattern_engine/actions/workflows/ci.yml/badge.svg)
 
 # AST Pattern Engine
